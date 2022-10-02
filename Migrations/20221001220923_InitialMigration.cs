@@ -8,7 +8,7 @@ namespace CelebrityAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Category",
+                name: "Profession",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -95,7 +95,7 @@ namespace CelebrityAPI.Migrations
                     table.ForeignKey(
                         name: "FK_Celebrity_Category_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Category",
+                        principalTable: "Profession",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -140,7 +140,7 @@ namespace CelebrityAPI.Migrations
                 name: "UserAdmin");
 
             migrationBuilder.DropTable(
-                name: "Category");
+                name: "Profession");
 
             migrationBuilder.DropTable(
                 name: "Profession");

@@ -1,41 +1,41 @@
 ﻿using CelebrityAPI.Data;
 using CelebrityAPI.Model.Domain;
 using CelebrityAPI.Repository.IRepository;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CelebrityAPI.Repository
 {
-    public class CategoryRepository : ICrudRepository<Category>
+    public class ProfessionRepository : ICrudRepository<Profession>
     {
         private readonly ApplicationDBContext dBContext;
 
-        public CategoryRepository(ApplicationDBContext dBContext)
+        public ProfessionRepository(ApplicationDBContext dBContext)
         {
             this.dBContext = dBContext;
         }
 
-        public IEnumerable<Category> GetAll()
+        public IEnumerable<Profession> GetAll()
         {
-            return dBContext.Category.ToList();
+            return dBContext.Profession.ToList();
         }
 
-        public Category GetById(Guid id)
+        public Profession GetById(Guid id)
         {
-            return dBContext.Category.FirstOrDefault(x => x.Id == id);
+            return dBContext.Profession.FirstOrDefault(x => x.Id == id);
         }
 
-        public Category Save(Category data)
+        public Profession Save(Profession data)
         {
-            dBContext.Category.Add(data);
+            dBContext.Profession.Add(data);
             dBContext.SaveChanges();
             return data;
         }
 
-        public Category Update(Guid id, Category data)
+        public Profession Update(Guid id, Profession data)
         {
-            var getValue = dBContext.Category.FirstOrDefault((x => x.Id == id));
+            var getValue = dBContext.Profession.FirstOrDefault(x => x.Id == id);
             if (getValue != null)
             {
                 getValue.Name = data.Name;
@@ -46,7 +46,7 @@ namespace CelebrityAPI.Repository
 
         public bool DeleteById(Guid id)
         {
-            var getValue = dBContext.Category.FirstOrDefault((x => x.Id == id));
+            var getValue = dBContext.Profession.FirstOrDefault(x => x.Id == id);
             dBContext.Remove(getValue);
             dBContext.SaveChanges();
             return getValue != null;

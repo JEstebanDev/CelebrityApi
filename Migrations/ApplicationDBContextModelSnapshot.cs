@@ -19,7 +19,7 @@ namespace CelebrityAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("CelebrityAPI.Model.Domain.Category", b =>
+            modelBuilder.Entity("CelebrityAPI.Model.Domain.SocialMedia", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,7 +30,7 @@ namespace CelebrityAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("SocialMedia");
                 });
 
             modelBuilder.Entity("CelebrityAPI.Model.Domain.Celebrity", b =>
@@ -74,7 +74,7 @@ namespace CelebrityAPI.Migrations
                     b.ToTable("Celebrity");
                 });
 
-            modelBuilder.Entity("CelebrityAPI.Model.Domain.Profession", b =>
+            modelBuilder.Entity("CelebrityAPI.Model.Domain.SocialMedia", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -85,7 +85,7 @@ namespace CelebrityAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profession");
+                    b.ToTable("SocialMedia");
                 });
 
             modelBuilder.Entity("CelebrityAPI.Model.Domain.SocialMedia", b =>
@@ -156,11 +156,11 @@ namespace CelebrityAPI.Migrations
 
             modelBuilder.Entity("CelebrityAPI.Model.Domain.Celebrity", b =>
                 {
-                    b.HasOne("CelebrityAPI.Model.Domain.Category", "Category")
+                    b.HasOne("CelebrityAPI.Model.Domain.SocialMedia", "SocialMedia")
                         .WithMany()
                         .HasForeignKey("CategoryId");
 
-                    b.HasOne("CelebrityAPI.Model.Domain.Profession", "Profession")
+                    b.HasOne("CelebrityAPI.Model.Domain.SocialMedia", "SocialMedia")
                         .WithMany()
                         .HasForeignKey("ProfessionId");
 
