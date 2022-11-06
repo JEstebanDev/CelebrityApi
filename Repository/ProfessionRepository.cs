@@ -7,49 +7,48 @@ using System.Linq;
 
 namespace CelebrityAPI.Repository
 {
-    public class ProfessionRepository : ICrudRepository<Profession>
+    public class ProfessionRepository : IReadDeleteRepository<Profession>, ISaveAndUpdateRepository<Profession>
     {
-        private readonly ApplicationDBContext dBContext;
+        private readonly ApplicationDBContext _dBContext;
 
         public ProfessionRepository(ApplicationDBContext dBContext)
         {
-            this.dBContext = dBContext;
+            _dBContext = dBContext;
         }
 
         public IEnumerable<Profession> GetAll()
         {
-            return dBContext.Profession.ToList();
+            return _dBContext.Profession.ToList();
         }
 
         public Profession GetById(Guid id)
         {
-            return dBContext.Profession.FirstOrDefault(x => x.Id == id);
+            return _dBContext.Profession.FirstOrDefault(x => x.Id == id);
         }
 
         public Profession Save(Profession data)
         {
-            dBContext.Profession.Add(data);
-            dBContext.SaveChanges();
+            _dBContext.Profession.Add(data);
+            _dBContext.SaveChanges();
             return data;
         }
 
         public Profession Update(Guid id, Profession data)
         {
-            var getValue = dBContext.Profession.FirstOrDefault(x => x.Id == id);
-            if (getValue != null)
-            {
-                getValue.Name = data.Name;
-                dBContext.SaveChanges();
-            }
+            var getValue = _dBContext.Profession.FirstOrDefault(x => x.Id == id);
+            if (getValue == null) return null;
+            getValue.Name = data.Name;
+            _dBContext.SaveChanges();
             return getValue;
         }
 
         public bool DeleteById(Guid id)
         {
-            var getValue = dBContext.Profession.FirstOrDefault(x => x.Id == id);
-            dBContext.Remove(getValue);
-            dBContext.SaveChanges();
-            return getValue != null;
+            var getValue = _dBContext.Profession.FirstOrDefault(x => x.Id == id);
+            if (getValue == null) return false;
+            _dBContext.Remove(getValue);
+            _dBContext.SaveChanges();
+            return true;
         }
     }
 }

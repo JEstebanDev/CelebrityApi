@@ -1,5 +1,6 @@
 using CelebrityAPI.Data;
 using CelebrityAPI.Model.Domain;
+using CelebrityAPI.Model.DTO;
 using CelebrityAPI.Repository;
 using CelebrityAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Builder;
@@ -29,13 +30,19 @@ namespace CelebrityAPI
             services.AddControllers();
             services.AddDbContext<ApplicationDBContext>(dbOptions => dbOptions.UseSqlServer(Configuration.GetConnectionString("DbConnection")));
 
-            services.AddTransient(typeof(ICrudRepository<Category>), typeof(CategoryRepository));
-            services.AddTransient(typeof(ICrudRepository<Profession>), typeof(ProfessionRepository));
-            services.AddTransient(typeof(ICrudRepository<SocialMedia>), typeof(SocialMediaRepository));
-            services.AddTransient(typeof(ICrudRepository<UserAdmin>), typeof(UserAdminRepository));
-            services.AddTransient(typeof(ICrudRepository<User>), typeof(UserRepository));
-            services.AddTransient(typeof(ICrudCelebrityRepository), typeof(CelebrityRepository));
+            services.AddTransient(typeof(IReadDeleteRepository<Category>), typeof(CategoryRepository));
+            services.AddTransient(typeof(IReadDeleteRepository<Profession>), typeof(ProfessionRepository));
+            services.AddTransient(typeof(IReadDeleteRepository<SocialMedia>), typeof(SocialMediaRepository));
+            services.AddTransient(typeof(IReadDeleteRepository<UserAdmin>), typeof(UserAdminRepository));
+            services.AddTransient(typeof(IReadDeleteRepository<User>), typeof(UserRepository));
+            services.AddTransient(typeof(IReadDeleteRepository<CelebrityResponse>), typeof(CelebrityRepository));
 
+            services.AddTransient(typeof(ISaveAndUpdateRepository<Category>), typeof(CategoryRepository));
+            services.AddTransient(typeof(ISaveAndUpdateRepository<Profession>), typeof(ProfessionRepository));
+            services.AddTransient(typeof(ISaveAndUpdateRepository<SocialMedia>), typeof(SocialMediaRepository));
+            services.AddTransient(typeof(ISaveAndUpdateRepository<UserAdmin>), typeof(UserAdminRepository));
+            services.AddTransient(typeof(ISaveAndUpdateRepository<User>), typeof(UserRepository));
+            services.AddTransient(typeof(ISaveCelebrityRepository), typeof(CelebrityRepository));
 
             //Adding the swagger
             services.AddControllers();

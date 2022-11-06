@@ -7,51 +7,51 @@ using System.Linq;
 
 namespace CelebrityAPI.Repository
 {
-    public class UserAdminRepository : ICrudRepository<UserAdmin>
+    public class UserAdminRepository : IReadDeleteRepository<UserAdmin>,ISaveAndUpdateRepository<UserAdmin>
     {
-        private readonly ApplicationDBContext dBContext;
+        private readonly ApplicationDBContext _dBContext;
 
         public UserAdminRepository(ApplicationDBContext dBContext)
         {
-            this.dBContext = dBContext;
+            _dBContext = dBContext;
         }
 
         public IEnumerable<UserAdmin> GetAll()
         {
-            return dBContext.UserAdmin.ToList();
+            return _dBContext.UserAdmin.ToList();
         }
 
         public UserAdmin GetById(Guid id)
         {
-            return dBContext.UserAdmin.FirstOrDefault(x => x.Id == id);
+            return _dBContext.UserAdmin.FirstOrDefault(x => x.Id == id);
         }
 
         public UserAdmin Save(UserAdmin data)
         {
-            dBContext.UserAdmin.Add(data);
-            dBContext.SaveChanges();
+            _dBContext.UserAdmin.Add(data);
+            _dBContext.SaveChanges();
             return data;
         }
 
         public UserAdmin Update(Guid id, UserAdmin data)
         {
-            var getValue = dBContext.UserAdmin.FirstOrDefault(x => x.Id == id);
+            var getValue = _dBContext.UserAdmin.FirstOrDefault(x => x.Id == id);
             if (getValue != null)
             {
                 getValue.Fullname = data.Fullname;
                 getValue.Username = data.Username;
                 getValue.Email = data.Email;
                 getValue.Password = data.Password;
-                dBContext.SaveChanges();
+                _dBContext.SaveChanges();
             }
             return getValue;
         }
 
         public bool DeleteById(Guid id)
         {
-            var getValue = dBContext.UserAdmin.FirstOrDefault(x => x.Id == id);
-            dBContext.Remove(getValue);
-            dBContext.SaveChanges();
+            var getValue = _dBContext.UserAdmin.FirstOrDefault(x => x.Id == id);
+            _dBContext.Remove(getValue);
+            _dBContext.SaveChanges();
             return getValue != null;
         }
     }

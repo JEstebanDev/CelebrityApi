@@ -9,24 +9,26 @@ namespace CelebrityAPI.Controllers
     [Route("user")]
     public class UserController : ControllerBase
     {
-        private readonly ICrudRepository<User> crudRepository;
+        private readonly IReadDeleteRepository<User> _readDeleteRepository;
+        private readonly ISaveAndUpdateRepository<User> _saveAndUpdateRepository;
 
-        public UserController(ICrudRepository<User> crudRepository)
+        public UserController(IReadDeleteRepository<User> readDeleteRepository, ISaveAndUpdateRepository<User> saveAndUpdateRepository)
         {
-            this.crudRepository = crudRepository;
+            _readDeleteRepository = readDeleteRepository;
+            _saveAndUpdateRepository = saveAndUpdateRepository;
         }
 
         [HttpGet]
         public IActionResult GetAllUser()
         {
-            return Ok(crudRepository.GetAll());
+            return Ok(_readDeleteRepository.GetAll());
         }
 
         [HttpGet]
         [Route("{id:Guid}")]
         public IActionResult GetUserById(Guid id)
         {
-            var value = crudRepository.GetById(id);
+            var value = _readDeleteRepository.GetById(id);
             if (value == null)
             {
                 return NotFound();
@@ -37,7 +39,7 @@ namespace CelebrityAPI.Controllers
         [HttpPost]
         public IActionResult SaveUser(User addUser)
         {
-            var value = crudRepository.Save(addUser);
+            var value = _saveAndUpdateRepository.Save(addUser);
             return Ok(value);
         }
 
@@ -45,7 +47,7 @@ namespace CelebrityAPI.Controllers
         [Route("{id:Guid}")]
         public IActionResult UpdateUser(Guid id, User updateUser)
         {
-            var value = crudRepository.Update(id, updateUser);
+            var value = _saveAndUpdateRepository.Update(id, updateUser);
             return Ok(value);
         }
 
@@ -53,7 +55,7 @@ namespace CelebrityAPI.Controllers
         [Route("{id:Guid}")]
         public IActionResult DeleteUserAdmin(Guid id)
         {
-            var isDeleted = crudRepository.DeleteById(id);
+            var isDeleted = _readDeleteRepository.DeleteById(id);
             return Ok(isDeleted);
         }
     }

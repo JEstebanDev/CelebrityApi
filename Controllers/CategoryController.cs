@@ -9,24 +9,26 @@ namespace CelebrityAPI.Controller
     [Route("category")]
     public class CategoryController : ControllerBase
     {
-        private readonly ICrudRepository<Category> crudRepository;
+        private readonly IReadDeleteRepository<Category> _readDeleteRepository;
+        private readonly ISaveAndUpdateRepository<Category> _saveAndUpdateRepository;
 
-        public CategoryController(ICrudRepository<Category> crudRepository)
+        public CategoryController(IReadDeleteRepository<Category> crudRepository, ISaveAndUpdateRepository<Category> saveAndUpdateRepository)
         {
-            this.crudRepository = crudRepository;
+            _readDeleteRepository = crudRepository;
+            _saveAndUpdateRepository = saveAndUpdateRepository;
         }
 
         [HttpGet]
         public IActionResult GetAllCategories()
         {
-            return Ok(crudRepository.GetAll());
+            return Ok(_readDeleteRepository.GetAll());
         }
 
         [HttpGet]
         [Route("{id:Guid}")]
         public IActionResult GetCategoryById(Guid id)
         {
-            var category = crudRepository.GetById(id);
+            var category = _readDeleteRepository.GetById(id);
             if (category == null)
             {
                 return NotFound();
@@ -37,7 +39,7 @@ namespace CelebrityAPI.Controller
         [HttpPost]
         public IActionResult SaveCategory(Category addCategory)
         {
-            var category = crudRepository.Save(addCategory);
+            var category = _saveAndUpdateRepository.Save(addCategory);
             return Ok(category);
         }
 
@@ -45,7 +47,7 @@ namespace CelebrityAPI.Controller
         [Route("{id:Guid}")]
         public IActionResult UpdateCategory(Guid id, Category updateCategory)
         {
-            var category = crudRepository.Update(id, updateCategory);
+            var category = _saveAndUpdateRepository.Update(id, updateCategory);
             return Ok(category);
         }
 
@@ -53,7 +55,7 @@ namespace CelebrityAPI.Controller
         [Route("{id:Guid}")]
         public IActionResult DeleteCategory(Guid id)
         {
-            var isDeleted = crudRepository.DeleteById(id);
+            var isDeleted = _readDeleteRepository.DeleteById(id);
             return Ok(isDeleted);
         }
     }

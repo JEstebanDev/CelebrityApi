@@ -8,16 +8,15 @@ using CelebrityAPI.Model.DTO;
 
 namespace CelebrityAPI.Repository
 {
-    public class CelebrityRepository : ICrudCelebrityRepository
+    public class CelebrityRepository : IReadDeleteRepository<CelebrityResponse>, ISaveCelebrityRepository
     {
         private readonly ApplicationDBContext _dBContext;
-
         public CelebrityRepository(ApplicationDBContext dBContext)
         {
             _dBContext = dBContext;
         }
 
-        public List<CelebrityResponse> GetAll()
+        public IEnumerable<CelebrityResponse> GetAll()
         {
             IEnumerable<Celebrity> listCelebrities = _dBContext.Celebrity.ToList();
             return listCelebrities.Select(TranslateOutputResponse).ToList();
@@ -39,7 +38,7 @@ namespace CelebrityAPI.Repository
                 Birthday = data.Birthday,
                 Age = data.Age,
                 Country = data.Country,
-                ImageURL = data.ImageURL,
+                ImageUrl = data.ImageUrl,
                 CategoryId = data.CategoryId,
                 SocialMediaId = data.SocialMediaId,
                 ProfessionId = data.ProfessionId
@@ -55,7 +54,7 @@ namespace CelebrityAPI.Repository
             if (getValue == null) return null;
             getValue.FullName = data.FullName;
             getValue.Age = data.Age;
-            getValue.ImageURL = data.ImageURL;
+            getValue.ImageUrl = data.ImageUrl;
             getValue.Country = data.Country;
             getValue.CategoryId = data.CategoryId;
             getValue.ProfessionId = data.ProfessionId;
@@ -86,7 +85,7 @@ namespace CelebrityAPI.Repository
                 Birthday = data.Birthday,
                 Age = data.Age,
                 Country = data.Country,
-                ImageURL = data.ImageURL,
+                ImageUrl = data.ImageUrl,
                 Category = category.Name,
                 Profession = profession.Name,
                 SocialMedia = listSocialMedia,

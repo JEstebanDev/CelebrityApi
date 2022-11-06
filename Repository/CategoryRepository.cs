@@ -7,49 +7,48 @@ using System.Linq;
 
 namespace CelebrityAPI.Repository
 {
-    public class CategoryRepository : ICrudRepository<Category>
+    public class CategoryRepository : IReadDeleteRepository<Category>,ISaveAndUpdateRepository<Category>
     {
-        private readonly ApplicationDBContext dBContext;
+        private readonly ApplicationDBContext _dBContext;
 
         public CategoryRepository(ApplicationDBContext dBContext)
         {
-            this.dBContext = dBContext;
+            _dBContext = dBContext;
         }
 
         public IEnumerable<Category> GetAll()
         {
-            return dBContext.Category.ToList();
+            return _dBContext.Category.ToList();
         }
 
         public Category GetById(Guid id)
         {
-            return dBContext.Category.FirstOrDefault(x => x.Id == id);
+            return _dBContext.Category.FirstOrDefault(x => x.Id == id);
         }
 
         public Category Save(Category data)
         {
-            dBContext.Category.Add(data);
-            dBContext.SaveChanges();
+            _dBContext.Category.Add(data);
+            _dBContext.SaveChanges();
             return data;
         }
 
         public Category Update(Guid id, Category data)
         {
-            var getValue = dBContext.Category.FirstOrDefault((x => x.Id == id));
-            if (getValue != null)
-            {
-                getValue.Name = data.Name;
-                dBContext.SaveChanges();
-            }
+            var getValue = _dBContext.Category.FirstOrDefault((x => x.Id == id));
+            if (getValue == null) return null;
+            getValue.Name = data.Name;
+            _dBContext.SaveChanges();
             return getValue;
         }
 
         public bool DeleteById(Guid id)
         {
-            var getValue = dBContext.Category.FirstOrDefault((x => x.Id == id));
-            dBContext.Remove(getValue);
-            dBContext.SaveChanges();
-            return getValue != null;
+            var getValue = _dBContext.Category.FirstOrDefault((x => x.Id == id));
+            if (getValue == null) return false;
+            _dBContext.Remove(getValue);
+            _dBContext.SaveChanges();
+            return true;
         }
     }
 }

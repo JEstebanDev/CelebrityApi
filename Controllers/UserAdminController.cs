@@ -9,24 +9,26 @@ namespace CelebrityAPI.Controllers
     [Route("useradmin")]
     public class UserAdminController : ControllerBase
     {
-        private readonly ICrudRepository<UserAdmin> crudRepository;
+        private readonly IReadDeleteRepository<UserAdmin> _readDeleteRepository;
+        private readonly ISaveAndUpdateRepository<UserAdmin> _saveAndUpdateRepository;
 
-        public UserAdminController(ICrudRepository<UserAdmin> crudRepository)
+        public UserAdminController(IReadDeleteRepository<UserAdmin> readDeleteRepository, ISaveAndUpdateRepository<UserAdmin> saveAndUpdateRepository)
         {
-            this.crudRepository = crudRepository;
+            _readDeleteRepository = readDeleteRepository;
+            _saveAndUpdateRepository = saveAndUpdateRepository;
         }
 
         [HttpGet]
         public IActionResult GetAllUserAdmin()
         {
-            return Ok(crudRepository.GetAll());
+            return Ok(_readDeleteRepository.GetAll());
         }
 
         [HttpGet]
         [Route("{id:Guid}")]
         public IActionResult GetUserAdminById(Guid id)
         {
-            var value = crudRepository.GetById(id);
+            var value = _readDeleteRepository.GetById(id);
             if (value == null)
             {
                 return NotFound();
@@ -37,7 +39,7 @@ namespace CelebrityAPI.Controllers
         [HttpPost]
         public IActionResult SaveUserAdmin(UserAdmin addUserAdmin)
         {
-            var value = crudRepository.Save(addUserAdmin);
+            var value = _saveAndUpdateRepository.Save(addUserAdmin);
             return Ok(value);
         }
 
@@ -45,7 +47,7 @@ namespace CelebrityAPI.Controllers
         [Route("{id:Guid}")]
         public IActionResult UpdateUserAdmin(Guid id, UserAdmin updateUserAdmin)
         {
-            var value = crudRepository.Update(id, updateUserAdmin);
+            var value = _saveAndUpdateRepository.Update(id, updateUserAdmin);
             return Ok(value);
         }
 
@@ -53,7 +55,7 @@ namespace CelebrityAPI.Controllers
         [Route("{id:Guid}")]
         public IActionResult DeleteUserAdmin(Guid id)
         {
-            var isDeleted = crudRepository.DeleteById(id);
+            var isDeleted = _readDeleteRepository.DeleteById(id);
             return Ok(isDeleted);
         }
     }

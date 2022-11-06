@@ -10,24 +10,26 @@ namespace CelebrityAPI.Controllers
     [Route("celebrity")]
     public class CelebrityController : ControllerBase
     {
-        private readonly ICrudCelebrityRepository crudRepository;
+        private readonly IReadDeleteRepository<Category> _readDeleteRepository;
+        private readonly ISaveCelebrityRepository _saveCelebrityRepository;
 
-        public CelebrityController(ICrudCelebrityRepository crudRepository)
+        public CelebrityController(ISaveCelebrityRepository saveCelebrityRepository, IReadDeleteRepository<Category> readDeleteRepository)
         {
-            this.crudRepository = crudRepository;
+            this._saveCelebrityRepository = saveCelebrityRepository;
+            _readDeleteRepository = readDeleteRepository;
         }
 
         [HttpGet]
         public IActionResult GetAllCelebrity()
         {
-            return Ok(crudRepository.GetAll());
+            return Ok(_readDeleteRepository.GetAll());
         }
 
         [HttpGet]
         [Route("{id:Guid}")]
         public IActionResult GetCelebrityById(Guid id)
         {
-            var value = crudRepository.GetById(id);
+            var value = _readDeleteRepository.GetById(id);
             if (value == null)
             {
                 return NotFound();
@@ -38,7 +40,7 @@ namespace CelebrityAPI.Controllers
         [HttpPost]
         public IActionResult SaveCelebrity(CelebrityDto addCelebrity)
         {
-            var value = crudRepository.Save(addCelebrity);
+            var value = _saveCelebrityRepository.Save(addCelebrity);
             return Ok(value);
         }
 
@@ -46,7 +48,7 @@ namespace CelebrityAPI.Controllers
         [Route("{id:Guid}")]
         public IActionResult UpdateCelebrity(Guid id, CelebrityDto updateCelebrity)
         {
-            var value = crudRepository.Update(id, updateCelebrity);
+            var value = _saveCelebrityRepository.Update(id, updateCelebrity);
             return Ok(value);
         }
 
@@ -54,7 +56,7 @@ namespace CelebrityAPI.Controllers
         [Route("{id:Guid}")]
         public IActionResult DeleteCelebrity(Guid id)
         {
-            var isDeleted = crudRepository.DeleteById(id);
+            var isDeleted = _readDeleteRepository.DeleteById(id);
             return Ok(isDeleted);
         }
     }

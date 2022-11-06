@@ -9,24 +9,26 @@ namespace CelebrityAPI.Controllers
     [Route("profession")]
     public class ProfessionController : ControllerBase
     {
-        private readonly ICrudRepository<Profession> crudRepository;
+        private readonly IReadDeleteRepository<Profession> _readDeleteRepository;
+        private readonly ISaveAndUpdateRepository<Profession> _saveAndUpdateRepository;
 
-        public ProfessionController(ICrudRepository<Profession> crudRepository)
+        public ProfessionController(IReadDeleteRepository<Profession> readDeleteRepository, ISaveAndUpdateRepository<Profession> saveAndUpdateRepository)
         {
-            this.crudRepository = crudRepository;
+            this._readDeleteRepository = readDeleteRepository;
+            _saveAndUpdateRepository = saveAndUpdateRepository;
         }
 
         [HttpGet]
         public IActionResult GetAllProfessions()
         {
-            return Ok(crudRepository.GetAll());
+            return Ok(_readDeleteRepository.GetAll());
         }
 
         [HttpGet]
         [Route("{id:Guid}")]
         public IActionResult GetProfessionById(Guid id)
         {
-            var value = crudRepository.GetById(id);
+            var value = _readDeleteRepository.GetById(id);
             if (value == null)
             {
                 return NotFound();
@@ -37,7 +39,7 @@ namespace CelebrityAPI.Controllers
         [HttpPost]
         public IActionResult SaveProfession(Profession addProfession)
         {
-            var value = crudRepository.Save(addProfession);
+            var value = _saveAndUpdateRepository.Save(addProfession);
             return Ok(value);
         }
 
@@ -45,7 +47,7 @@ namespace CelebrityAPI.Controllers
         [Route("{id:Guid}")]
         public IActionResult UpdateProfession(Guid id, Profession updateProfession)
         {
-            var value = crudRepository.Update(id, updateProfession);
+            var value = _saveAndUpdateRepository.Update(id, updateProfession);
             return Ok(value);
         }
 
@@ -53,7 +55,7 @@ namespace CelebrityAPI.Controllers
         [Route("{id:Guid}")]
         public IActionResult DeleteProfession(Guid id)
         {
-            var isDeleted = crudRepository.DeleteById(id);
+            var isDeleted = _readDeleteRepository.DeleteById(id);
             return Ok(isDeleted);
         }
     }
