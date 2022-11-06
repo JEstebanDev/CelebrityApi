@@ -9,10 +9,10 @@ namespace CelebrityAPI.Controllers
     [Route("useradmin")]
     public class UserAdminController : ControllerBase
     {
-        private readonly IReadDeleteRepository<UserAdmin> _readDeleteRepository;
-        private readonly ISaveAndUpdateRepository<UserAdmin> _saveAndUpdateRepository;
+        private readonly IReadAndDeleteRepository<UserAdmin> _readDeleteRepository;
+        private readonly ISaveAndUpdateRepository<UserAdmin, UserAdmin> _saveAndUpdateRepository;
 
-        public UserAdminController(IReadDeleteRepository<UserAdmin> readDeleteRepository, ISaveAndUpdateRepository<UserAdmin> saveAndUpdateRepository)
+        public UserAdminController(IReadAndDeleteRepository<UserAdmin> readDeleteRepository, ISaveAndUpdateRepository<UserAdmin, UserAdmin> saveAndUpdateRepository)
         {
             _readDeleteRepository = readDeleteRepository;
             _saveAndUpdateRepository = saveAndUpdateRepository;

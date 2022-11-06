@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace CelebrityAPI.Repository
 {
-    public class UserRepository : IReadDeleteRepository<User>, ISaveAndUpdateRepository<User>
+    public class UserRepository : IReadAndDeleteRepository<User>, ISaveAndUpdateRepository<User,User>
     {
         private readonly ApplicationDBContext _dBContext;
 

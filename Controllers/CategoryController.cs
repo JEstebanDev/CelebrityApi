@@ -9,10 +9,10 @@ namespace CelebrityAPI.Controller
     [Route("category")]
     public class CategoryController : ControllerBase
     {
-        private readonly IReadDeleteRepository<Category> _readDeleteRepository;
-        private readonly ISaveAndUpdateRepository<Category> _saveAndUpdateRepository;
+        private readonly IReadAndDeleteRepository<Category> _readDeleteRepository;
+        private readonly ISaveAndUpdateRepository<Category,Category> _saveAndUpdateRepository;
 
-        public CategoryController(IReadDeleteRepository<Category> crudRepository, ISaveAndUpdateRepository<Category> saveAndUpdateRepository)
+        public CategoryController(IReadAndDeleteRepository<Category> crudRepository, ISaveAndUpdateRepository<Category, Category> saveAndUpdateRepository)
         {
             _readDeleteRepository = crudRepository;
             _saveAndUpdateRepository = saveAndUpdateRepository;

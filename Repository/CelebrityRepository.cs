@@ -8,7 +8,7 @@ using CelebrityAPI.Model.DTO;
 
 namespace CelebrityAPI.Repository
 {
-    public class CelebrityRepository : IReadDeleteRepository<CelebrityResponse>, ISaveCelebrityRepository
+    public class CelebrityRepository : IReadAndDeleteRepository<CelebrityResponse>, ISaveAndUpdateRepository<CelebrityResponse, CelebrityDto>
     {
         private readonly ApplicationDBContext _dBContext;
         public CelebrityRepository(ApplicationDBContext dBContext)

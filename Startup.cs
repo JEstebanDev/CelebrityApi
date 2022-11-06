@@ -30,19 +30,19 @@ namespace CelebrityAPI
             services.AddControllers();
             services.AddDbContext<ApplicationDBContext>(dbOptions => dbOptions.UseSqlServer(Configuration.GetConnectionString("DbConnection")));
 
-            services.AddTransient(typeof(IReadDeleteRepository<Category>), typeof(CategoryRepository));
-            services.AddTransient(typeof(IReadDeleteRepository<Profession>), typeof(ProfessionRepository));
-            services.AddTransient(typeof(IReadDeleteRepository<SocialMedia>), typeof(SocialMediaRepository));
-            services.AddTransient(typeof(IReadDeleteRepository<UserAdmin>), typeof(UserAdminRepository));
-            services.AddTransient(typeof(IReadDeleteRepository<User>), typeof(UserRepository));
-            services.AddTransient(typeof(IReadDeleteRepository<CelebrityResponse>), typeof(CelebrityRepository));
+            services.AddTransient(typeof(IReadAndDeleteRepository<Category>), typeof(CategoryRepository));
+            services.AddTransient(typeof(IReadAndDeleteRepository<Profession>), typeof(ProfessionRepository));
+            services.AddTransient(typeof(IReadAndDeleteRepository<SocialMedia>), typeof(SocialMediaRepository));
+            services.AddTransient(typeof(IReadAndDeleteRepository<UserAdmin>), typeof(UserAdminRepository));
+            services.AddTransient(typeof(IReadAndDeleteRepository<User>), typeof(UserRepository));
+            services.AddTransient(typeof(IReadAndDeleteRepository<CelebrityResponse>), typeof(CelebrityRepository));
 
-            services.AddTransient(typeof(ISaveAndUpdateRepository<Category>), typeof(CategoryRepository));
-            services.AddTransient(typeof(ISaveAndUpdateRepository<Profession>), typeof(ProfessionRepository));
-            services.AddTransient(typeof(ISaveAndUpdateRepository<SocialMedia>), typeof(SocialMediaRepository));
-            services.AddTransient(typeof(ISaveAndUpdateRepository<UserAdmin>), typeof(UserAdminRepository));
-            services.AddTransient(typeof(ISaveAndUpdateRepository<User>), typeof(UserRepository));
-            services.AddTransient(typeof(ISaveCelebrityRepository), typeof(CelebrityRepository));
+            services.AddTransient(typeof(ISaveAndUpdateRepository<Category, Category>), typeof(CategoryRepository));
+            services.AddTransient(typeof(ISaveAndUpdateRepository<Profession, Profession>), typeof(ProfessionRepository));
+            services.AddTransient(typeof(ISaveAndUpdateRepository<SocialMedia, SocialMedia>), typeof(SocialMediaRepository));
+            services.AddTransient(typeof(ISaveAndUpdateRepository<UserAdmin, UserAdmin>), typeof(UserAdminRepository));
+            services.AddTransient(typeof(ISaveAndUpdateRepository<User, User>), typeof(UserRepository));
+            services.AddTransient(typeof(ISaveAndUpdateRepository<CelebrityResponse, CelebrityDto>), typeof(CelebrityRepository));
 
             //Adding the swagger
             services.AddControllers();
@@ -89,7 +89,7 @@ namespace CelebrityAPI
                     "include youtubers instagrams and tiktok fenomens or actress, " +
                     "sport player very unique information. For example net worth, " +
                     "lucy number lucky color, education, weight, height and much more facts.",
-                    
+
                     Contact = new OpenApiContact
                     {
                         Name = "Celebrity API",

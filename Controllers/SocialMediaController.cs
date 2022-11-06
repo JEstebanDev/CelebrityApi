@@ -9,9 +9,9 @@ namespace CelebrityAPI.Controllers
     [Route("socialmedia")]
     public class SocialMediaController : ControllerBase
     {
-        private readonly IReadDeleteRepository<SocialMedia> _readDeleteRepository;
-        private readonly ISaveAndUpdateRepository<SocialMedia> _saveAndUpdateRepository;
-        public SocialMediaController(IReadDeleteRepository<SocialMedia> readDeleteRepository, ISaveAndUpdateRepository<SocialMedia> saveAndUpdateRepository)
+        private readonly IReadAndDeleteRepository<SocialMedia> _readDeleteRepository;
+        private readonly ISaveAndUpdateRepository<SocialMedia, SocialMedia> _saveAndUpdateRepository;
+        public SocialMediaController(IReadAndDeleteRepository<SocialMedia> readDeleteRepository, ISaveAndUpdateRepository<SocialMedia, SocialMedia> saveAndUpdateRepository)
         {
             this._readDeleteRepository = readDeleteRepository;
             _saveAndUpdateRepository = saveAndUpdateRepository;

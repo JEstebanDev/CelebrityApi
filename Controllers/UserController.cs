@@ -9,10 +9,9 @@ namespace CelebrityAPI.Controllers
     [Route("user")]
     public class UserController : ControllerBase
     {
-        private readonly IReadDeleteRepository<User> _readDeleteRepository;
-        private readonly ISaveAndUpdateRepository<User> _saveAndUpdateRepository;
-
-        public UserController(IReadDeleteRepository<User> readDeleteRepository, ISaveAndUpdateRepository<User> saveAndUpdateRepository)
+        private readonly IReadAndDeleteRepository<User> _readDeleteRepository;
+        private readonly ISaveAndUpdateRepository<User, User> _saveAndUpdateRepository;
+        public UserController(IReadAndDeleteRepository<User> readDeleteRepository, ISaveAndUpdateRepository<User, User> saveAndUpdateRepository)
         {
             _readDeleteRepository = readDeleteRepository;
             _saveAndUpdateRepository = saveAndUpdateRepository;

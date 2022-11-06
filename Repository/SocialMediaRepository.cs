@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace CelebrityAPI.Repository
 {
-    public class SocialMediaRepository : IReadDeleteRepository<SocialMedia>, ISaveAndUpdateRepository<SocialMedia>
+    public class SocialMediaRepository : IReadAndDeleteRepository<SocialMedia>, ISaveAndUpdateRepository<SocialMedia,SocialMedia>
     {
         private readonly ApplicationDBContext _dBContext;
 

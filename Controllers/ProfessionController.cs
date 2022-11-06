@@ -9,10 +9,10 @@ namespace CelebrityAPI.Controllers
     [Route("profession")]
     public class ProfessionController : ControllerBase
     {
-        private readonly IReadDeleteRepository<Profession> _readDeleteRepository;
-        private readonly ISaveAndUpdateRepository<Profession> _saveAndUpdateRepository;
+        private readonly IReadAndDeleteRepository<Profession> _readDeleteRepository;
+        private readonly ISaveAndUpdateRepository<Profession, Profession> _saveAndUpdateRepository;
 
-        public ProfessionController(IReadDeleteRepository<Profession> readDeleteRepository, ISaveAndUpdateRepository<Profession> saveAndUpdateRepository)
+        public ProfessionController(IReadAndDeleteRepository<Profession> readDeleteRepository, ISaveAndUpdateRepository<Profession, Profession> saveAndUpdateRepository)
         {
             this._readDeleteRepository = readDeleteRepository;
             _saveAndUpdateRepository = saveAndUpdateRepository;

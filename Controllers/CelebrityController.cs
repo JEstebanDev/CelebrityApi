@@ -10,12 +10,12 @@ namespace CelebrityAPI.Controllers
     [Route("celebrity")]
     public class CelebrityController : ControllerBase
     {
-        private readonly IReadDeleteRepository<Category> _readDeleteRepository;
-        private readonly ISaveCelebrityRepository _saveCelebrityRepository;
+        private readonly IReadAndDeleteRepository<CelebrityResponse> _readDeleteRepository;
+        private readonly ISaveAndUpdateRepository<CelebrityResponse, CelebrityDto> _saveAndUpdateRepository;
 
-        public CelebrityController(ISaveCelebrityRepository saveCelebrityRepository, IReadDeleteRepository<Category> readDeleteRepository)
+        public CelebrityController(ISaveAndUpdateRepository<CelebrityResponse, CelebrityDto> saveAndUpdateRepository, IReadAndDeleteRepository<CelebrityResponse> readDeleteRepository)
         {
-            this._saveCelebrityRepository = saveCelebrityRepository;
+            _saveAndUpdateRepository = saveAndUpdateRepository;
             _readDeleteRepository = readDeleteRepository;
         }
 
@@ -40,7 +40,7 @@ namespace CelebrityAPI.Controllers
         [HttpPost]
         public IActionResult SaveCelebrity(CelebrityDto addCelebrity)
         {
-            var value = _saveCelebrityRepository.Save(addCelebrity);
+            var value = _saveAndUpdateRepository.Save(addCelebrity);
             return Ok(value);
         }
 
@@ -48,7 +48,7 @@ namespace CelebrityAPI.Controllers
         [Route("{id:Guid}")]
         public IActionResult UpdateCelebrity(Guid id, CelebrityDto updateCelebrity)
         {
-            var value = _saveCelebrityRepository.Update(id, updateCelebrity);
+            var value = _saveAndUpdateRepository.Update(id, updateCelebrity);
             return Ok(value);
         }
 

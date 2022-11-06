@@ -2,9 +2,9 @@
 
 namespace CelebrityAPI.Repository.IRepository
 {
-    public interface ISaveAndUpdateRepository<T> where T : class
+    public interface ISaveAndUpdateRepository<out T, in TL> where T : class
     {
-        T Save(T data);
-        T Update(Guid id, T data);
+        T Save(TL data);
+        T Update(Guid id, TL data);
     }
 }
