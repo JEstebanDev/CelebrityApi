@@ -2,6 +2,7 @@
 using CelebrityAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using CelebrityAPI.Model.DTO;
 
 namespace CelebrityAPI.Controllers
 {
@@ -9,9 +10,9 @@ namespace CelebrityAPI.Controllers
     [Route("celebrity")]
     public class CelebrityController : ControllerBase
     {
-        private readonly ICrudRepository<Celebrity> crudRepository;
+        private readonly ICrudCelebrityRepository crudRepository;
 
-        public CelebrityController(ICrudRepository<Celebrity> crudRepository)
+        public CelebrityController(ICrudCelebrityRepository crudRepository)
         {
             this.crudRepository = crudRepository;
         }
@@ -35,7 +36,7 @@ namespace CelebrityAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveCelebrity(Celebrity addCelebrity)
+        public IActionResult SaveCelebrity(CelebrityDto addCelebrity)
         {
             var value = crudRepository.Save(addCelebrity);
             return Ok(value);
@@ -43,7 +44,7 @@ namespace CelebrityAPI.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
-        public IActionResult UpdateCelebrity(Guid id, Celebrity updateCelebrity)
+        public IActionResult UpdateCelebrity(Guid id, CelebrityDto updateCelebrity)
         {
             var value = crudRepository.Update(id, updateCelebrity);
             return Ok(value);

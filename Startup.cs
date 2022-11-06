@@ -34,7 +34,9 @@ namespace CelebrityAPI
             services.AddTransient(typeof(ICrudRepository<SocialMedia>), typeof(SocialMediaRepository));
             services.AddTransient(typeof(ICrudRepository<UserAdmin>), typeof(UserAdminRepository));
             services.AddTransient(typeof(ICrudRepository<User>), typeof(UserRepository));
-            services.AddTransient(typeof(ICrudRepository<Celebrity>), typeof(CelebrityRepository));
+            services.AddTransient(typeof(ICrudCelebrityRepository), typeof(CelebrityRepository));
+
+
             //Adding the swagger
             services.AddControllers();
             AddSwagger(services);

@@ -4,58 +4,103 @@ using CelebrityAPI.Repository.IRepository;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using CelebrityAPI.Model.DTO;
 
 namespace CelebrityAPI.Repository
 {
-    public class CelebrityRepository : ICrudRepository<Celebrity>
+    public class CelebrityRepository : ICrudCelebrityRepository
     {
-        private readonly ApplicationDBContext dBContext;
+        private readonly ApplicationDBContext _dBContext;
 
         public CelebrityRepository(ApplicationDBContext dBContext)
         {
-            this.dBContext = dBContext;
+            _dBContext = dBContext;
         }
 
-        public IEnumerable<Celebrity> GetAll()
+        public List<CelebrityResponse> GetAll()
         {
-            return dBContext.Celebrity.ToList();
+            IEnumerable<Celebrity> listCelebrities = _dBContext.Celebrity.ToList();
+            return listCelebrities.Select(TranslateOutputResponse).ToList();
         }
 
-        public Celebrity GetById(Guid id)
+        public CelebrityResponse GetById(Guid id)
         {
-            return dBContext.Celebrity.FirstOrDefault(x => x.Id == id);
+            var celebrity = _dBContext.Celebrity.FirstOrDefault(x => x.Id == id);
+
+            return TranslateOutputResponse(celebrity);
         }
 
-        public Celebrity Save(Celebrity data)
+        public CelebrityResponse Save(CelebrityDto data)
         {
-            dBContext.Celebrity.Add(data);
-            dBContext.SaveChanges();
-            return data;
-        }
-
-        public Celebrity Update(Guid id, Celebrity data)
-        {
-            var getValue = dBContext.Celebrity.FirstOrDefault(x => x.Id == id);
-            if (getValue != null)
+            var celebrity = new Celebrity()
             {
-                getValue.FullName = data.FullName;
-                getValue.Age = data.Age;
-                getValue.ImageURL = data.ImageURL;
-                getValue.Country = data.Country;
-                getValue.Category = data.Category;
-                getValue.Profession = data.Profession;
-                getValue.Birthday = data.Birthday;
-                dBContext.SaveChanges();
+                Id = data.Id,
+                FullName = data.FullName,
+                Birthday = data.Birthday,
+                Age = data.Age,
+                Country = data.Country,
+                ImageURL = data.ImageURL,
+                CategoryId = data.CategoryId,
+                SocialMediaId = data.SocialMediaId,
+                ProfessionId = data.ProfessionId
+            };
+            _dBContext.Celebrity.Add(celebrity);
+            _dBContext.SaveChanges();
+            return TranslateOutputResponse(celebrity);
+        }
+
+        public CelebrityResponse Update(Guid id, CelebrityDto data)
+        {
+            var getValue = _dBContext.Celebrity.FirstOrDefault(x => x.Id == id);
+            if (getValue == null) return null;
+            getValue.FullName = data.FullName;
+            getValue.Age = data.Age;
+            getValue.ImageURL = data.ImageURL;
+            getValue.Country = data.Country;
+            getValue.CategoryId = data.CategoryId;
+            getValue.ProfessionId = data.ProfessionId;
+            getValue.SocialMediaId = data.SocialMediaId;
+            getValue.Birthday = data.Birthday;
+            _dBContext.SaveChanges();
+            return TranslateOutputResponse(getValue);
+        }
+
+        private CelebrityResponse TranslateOutputResponse(Celebrity data)
+        {
+            var socialMedia = _dBContext.SocialMedia.FirstOrDefault(x => x.Id == data.SocialMediaId);
+            var category = _dBContext.Category.FirstOrDefault(x => x.Id == data.CategoryId);
+            var profession = _dBContext.Profession.FirstOrDefault(x => x.Id == data.ProfessionId);
+            var listSocialMedia = new List<string>();
+            if (socialMedia != null)
+            {
+                listSocialMedia.Add(socialMedia.FacebookURL);
+                listSocialMedia.Add(socialMedia.InstagramURL);
+                listSocialMedia.Add(socialMedia.TwitterURL);
             }
-            return getValue;
+
+            if (category == null || profession == null) return null;
+            var celebrityResponse = new CelebrityResponse()
+            {
+                Id = data.Id,
+                FullName = data.FullName,
+                Birthday = data.Birthday,
+                Age = data.Age,
+                Country = data.Country,
+                ImageURL = data.ImageURL,
+                Category = category.Name,
+                Profession = profession.Name,
+                SocialMedia = listSocialMedia,
+            };
+            return celebrityResponse;
         }
 
         public bool DeleteById(Guid id)
         {
-            var getValue = dBContext.Celebrity.FirstOrDefault(x => x.Id == id);
-            dBContext.Remove(getValue);
-            dBContext.SaveChanges();
-            return getValue != null;
+            var getValue = _dBContext.Celebrity.FirstOrDefault(x => x.Id == id);
+            if (getValue == null) return false;
+            _dBContext.Remove(getValue);
+            _dBContext.SaveChanges();
+            return true;
         }
     }
 }

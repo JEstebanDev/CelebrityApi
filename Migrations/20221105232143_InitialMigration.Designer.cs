@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CelebrityAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20221001220923_InitialMigration")]
+    [Migration("20221105232143_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,7 +21,7 @@ namespace CelebrityAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("CelebrityAPI.Model.Domain.SocialMedia", b =>
+            modelBuilder.Entity("CelebrityAPI.Model.Domain.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,7 +32,7 @@ namespace CelebrityAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SocialMedia");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("CelebrityAPI.Model.Domain.Celebrity", b =>
@@ -76,7 +76,7 @@ namespace CelebrityAPI.Migrations
                     b.ToTable("Celebrity");
                 });
 
-            modelBuilder.Entity("CelebrityAPI.Model.Domain.SocialMedia", b =>
+            modelBuilder.Entity("CelebrityAPI.Model.Domain.Profession", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +87,7 @@ namespace CelebrityAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SocialMedia");
+                    b.ToTable("Profession");
                 });
 
             modelBuilder.Entity("CelebrityAPI.Model.Domain.SocialMedia", b =>
@@ -158,11 +158,11 @@ namespace CelebrityAPI.Migrations
 
             modelBuilder.Entity("CelebrityAPI.Model.Domain.Celebrity", b =>
                 {
-                    b.HasOne("CelebrityAPI.Model.Domain.SocialMedia", "SocialMedia")
+                    b.HasOne("CelebrityAPI.Model.Domain.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId");
 
-                    b.HasOne("CelebrityAPI.Model.Domain.SocialMedia", "SocialMedia")
+                    b.HasOne("CelebrityAPI.Model.Domain.Profession", "Profession")
                         .WithMany()
                         .HasForeignKey("ProfessionId");
 

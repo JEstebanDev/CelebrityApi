@@ -1,21 +1,18 @@
-﻿using System;
+﻿using CelebrityAPI.Model.Domain;
+using System;
 
-namespace CelebrityAPI.Model.Domain
+namespace CelebrityAPI.Model.DTO
 {
-    public class Celebrity
+    public class CelebrityDto
     {
         public Guid Id { get; set; }
         public string ImageURL { get; set; }
-        public string FullName { get; set; } 
+        public string FullName { get; set; }
         public DateTime Birthday { get; set; }
         public int Age { get; set; }
         public string Country { get; set; }
         public Guid CategoryId { get; set; }
         public Guid ProfessionId { get; set; }
         public Guid SocialMediaId { get; set; }
-        public Category Category { get; set; }
-        public Profession Profession { get; set; }
-        public SocialMedia SocialMedia { get; set; }
-
     }
 }
