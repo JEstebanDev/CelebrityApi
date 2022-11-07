@@ -3,6 +3,7 @@ using CelebrityAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using CelebrityAPI.Model.DTO;
+using CelebrityAPI.Repository;
 
 namespace CelebrityAPI.Controllers
 {
@@ -12,17 +13,24 @@ namespace CelebrityAPI.Controllers
     {
         private readonly IReadAndDeleteRepository<CelebrityResponse> _readDeleteRepository;
         private readonly ISaveAndUpdateRepository<CelebrityResponse, CelebrityDto> _saveAndUpdateRepository;
-
-        public CelebrityController(ISaveAndUpdateRepository<CelebrityResponse, CelebrityDto> saveAndUpdateRepository, IReadAndDeleteRepository<CelebrityResponse> readDeleteRepository)
+        private readonly IFiltersRepository _filtersRepository;
+        public CelebrityController(ISaveAndUpdateRepository<CelebrityResponse, CelebrityDto> saveAndUpdateRepository,
+            IReadAndDeleteRepository<CelebrityResponse> readDeleteRepository, IFiltersRepository filtersRepository)
         {
             _saveAndUpdateRepository = saveAndUpdateRepository;
             _readDeleteRepository = readDeleteRepository;
+            _filtersRepository = filtersRepository;
         }
 
         [HttpGet]
         public IActionResult GetAllCelebrity()
         {
-            return Ok(_readDeleteRepository.GetAll());
+            var celebrityResponses = _readDeleteRepository.GetAll();
+            if (celebrityResponses == null)
+            {
+                return NotFound();
+            }
+            return Ok(celebrityResponses);
         }
 
         [HttpGet]
@@ -30,6 +38,29 @@ namespace CelebrityAPI.Controllers
         public IActionResult GetCelebrityById(Guid id)
         {
             var value = _readDeleteRepository.GetById(id);
+            if (value == null)
+            {
+                return NotFound();
+            }
+            return Ok(value);
+        }
+        [HttpGet]
+        [Route("searchByCategory/{categoryId:Guid}")]
+        public IActionResult GetCelebrityByCategory(Guid categoryId)
+        {
+            var value = _filtersRepository.GetByCategory(categoryId);
+            if (value == null)
+            {
+                return NotFound();
+            }
+            return Ok(value);
+        }
+
+        [HttpGet]
+        [Route("searchByProfession/{professionId:Guid}")]
+        public IActionResult GetCelebrityByProfession(Guid professionId)
+        {
+            var value = _filtersRepository.GetByProfession(professionId);
             if (value == null)
             {
                 return NotFound();

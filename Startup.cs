@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using CelebrityAPI.Controllers;
 
 namespace CelebrityAPI
 {
@@ -36,6 +37,7 @@ namespace CelebrityAPI
             services.AddTransient(typeof(IReadAndDeleteRepository<UserAdmin>), typeof(UserAdminRepository));
             services.AddTransient(typeof(IReadAndDeleteRepository<User>), typeof(UserRepository));
             services.AddTransient(typeof(IReadAndDeleteRepository<CelebrityResponse>), typeof(CelebrityRepository));
+            services.AddTransient(typeof(IFiltersRepository), typeof(CelebrityRepository));
 
             services.AddTransient(typeof(ISaveAndUpdateRepository<Category, Category>), typeof(CategoryRepository));
             services.AddTransient(typeof(ISaveAndUpdateRepository<Profession, Profession>), typeof(ProfessionRepository));

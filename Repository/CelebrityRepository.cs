@@ -8,7 +8,7 @@ using CelebrityAPI.Model.DTO;
 
 namespace CelebrityAPI.Repository
 {
-    public class CelebrityRepository : IReadAndDeleteRepository<CelebrityResponse>, ISaveAndUpdateRepository<CelebrityResponse, CelebrityDto>
+    public class CelebrityRepository : IReadAndDeleteRepository<CelebrityResponse>, ISaveAndUpdateRepository<CelebrityResponse, CelebrityDto>, IFiltersRepository
     {
         private readonly ApplicationDBContext _dBContext;
         public CelebrityRepository(ApplicationDBContext dBContext)
@@ -20,6 +20,18 @@ namespace CelebrityAPI.Repository
         {
             IEnumerable<Celebrity> listCelebrities = _dBContext.Celebrity.ToList();
             return listCelebrities.Select(TranslateOutputResponse).ToList();
+        }
+
+        public IEnumerable<CelebrityResponse> GetByCategory(Guid categoryId)
+        {
+            IEnumerable<Celebrity> celebrity = _dBContext.Celebrity.Where(x => x.CategoryId == categoryId).ToList();
+            return !celebrity.Any() ? null : celebrity.Select(TranslateOutputResponse).ToList();
+        }
+
+        public IEnumerable<CelebrityResponse> GetByProfession(Guid professionId)
+        {
+            IEnumerable<Celebrity> celebrity = _dBContext.Celebrity.Where(x => x.ProfessionId == professionId).ToList();
+            return !celebrity.Any() ? null : celebrity.Select(TranslateOutputResponse).ToList();
         }
 
         public CelebrityResponse GetById(Guid id)
@@ -72,9 +84,18 @@ namespace CelebrityAPI.Repository
             var listSocialMedia = new List<string>();
             if (socialMedia != null)
             {
-                listSocialMedia.Add(socialMedia.FacebookURL);
-                listSocialMedia.Add(socialMedia.InstagramURL);
-                listSocialMedia.Add(socialMedia.TwitterURL);
+                if (!socialMedia.FacebookURL.Equals(""))
+                {
+                    listSocialMedia.Add(socialMedia.FacebookURL);
+                }
+                if (!socialMedia.InstagramURL.Equals(""))
+                {
+                    listSocialMedia.Add(socialMedia.InstagramURL);
+                }
+                if (!socialMedia.TwitterURL.Equals(""))
+                {
+                    listSocialMedia.Add(socialMedia.TwitterURL);
+                }
             }
 
             if (category == null || profession == null) return null;
