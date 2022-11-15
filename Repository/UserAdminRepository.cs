@@ -4,10 +4,11 @@ using CelebrityAPI.Repository.IRepository;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using CelebrityAPI.Error;
 
 namespace CelebrityAPI.Repository
 {
-    public class UserAdminRepository : IReadAndDeleteRepository<UserAdmin>,ISaveAndUpdateRepository<UserAdmin,UserAdmin>
+    public class UserAdminRepository : IReadAndDeleteRepository<UserAdmin>, ISaveAndUpdateRepository<UserAdmin, UserAdmin>
     {
         private readonly ApplicationDBContext _dBContext;
 
@@ -18,41 +19,75 @@ namespace CelebrityAPI.Repository
 
         public IEnumerable<UserAdmin> GetAll()
         {
-            return _dBContext.UserAdmin.ToList();
+            var listUserAdmins = _dBContext.UserAdmin.ToList();
+            if (listUserAdmins.Count == 0)
+            {
+                throw new AppException("There are not data");
+            }
+            if (listUserAdmins == null)
+            {
+                throw new AppException("Error searching the data");
+            }
+            return listUserAdmins;
         }
 
         public UserAdmin GetById(Guid id)
         {
-            return _dBContext.UserAdmin.FirstOrDefault(x => x.Id == id);
+            var userAdmin = _dBContext.UserAdmin.FirstOrDefault(x => x.Id == id);
+            if (userAdmin == null)
+            {
+                throw new AppException("There are not user with id:" + id);
+            }
+            return userAdmin;
         }
 
         public UserAdmin Save(UserAdmin data)
         {
-            _dBContext.UserAdmin.Add(data);
-            _dBContext.SaveChanges();
+            try
+            {
+                _dBContext.UserAdmin.Add(data);
+                _dBContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw new AppException(e.Message);
+            }
             return data;
         }
 
         public UserAdmin Update(Guid id, UserAdmin data)
         {
-            var getValue = _dBContext.UserAdmin.FirstOrDefault(x => x.Id == id);
-            if (getValue == null) return null;
-            getValue.Fullname = data.Fullname;
-            getValue.Username = data.Username;
-            getValue.Email = data.Email;
-            getValue.Password = data.Password;
-            _dBContext.SaveChanges();
-            return getValue;
+            try
+            {
+                var getValue = _dBContext.UserAdmin.FirstOrDefault(x => x.Id == id);
+                if (getValue == null) throw new AppException("There are not data with the id:" + id);
+                getValue.Fullname = data.Fullname;
+                getValue.Username = data.Username;
+                getValue.Email = data.Email;
+                getValue.Password = data.Password;
+                _dBContext.SaveChanges();
+                return getValue;
+            }
+            catch (Exception e)
+            {
+                throw new AppException(e.Message);
+            }
         }
 
         public bool DeleteById(Guid id)
         {
-            var getValue = _dBContext.UserAdmin.FirstOrDefault(x => x.Id == id);
-            if (getValue == null) return false;
-            _dBContext.Remove(getValue);
-            _dBContext.SaveChanges();
-            return true;
-
+            try
+            {
+                var getValue = _dBContext.UserAdmin.FirstOrDefault(x => x.Id == id);
+                if (getValue == null) throw new AppException("There are not data with the id:" + id);
+                _dBContext.Remove(getValue);
+                _dBContext.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new AppException(e.Message);
+            }
         }
     }
 }

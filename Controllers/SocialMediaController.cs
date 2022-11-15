@@ -28,10 +28,6 @@ namespace CelebrityAPI.Controllers
         public IActionResult GetSocialMediaById(Guid id)
         {
             var value = _readDeleteRepository.GetById(id);
-            if (value == null)
-            {
-                return NotFound();
-            }
             return Ok(value);
         }
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using CelebrityAPI.Model.DTO;
+using CelebrityAPI.Error;
 
 namespace CelebrityAPI.Repository
 {
@@ -19,61 +20,111 @@ namespace CelebrityAPI.Repository
         public IEnumerable<CelebrityResponse> GetAll()
         {
             IEnumerable<Celebrity> listCelebrities = _dBContext.Celebrity.ToList();
+            if (!listCelebrities.Any())
+            {
+                throw new AppException("Error searching the data");
+            }
             return listCelebrities.Select(TranslateOutputResponse).ToList();
         }
 
         public IEnumerable<CelebrityResponse> GetByCategory(Guid categoryId)
         {
-            IEnumerable<Celebrity> celebrity = _dBContext.Celebrity.Where(x => x.CategoryId == categoryId).ToList();
-            return !celebrity.Any() ? null : celebrity.Select(TranslateOutputResponse).ToList();
+            try
+            {
+                IEnumerable<Celebrity> celebrity = _dBContext.Celebrity.Where(x => x.CategoryId == categoryId).ToList();
+                if (celebrity.Any())
+                {
+                   return  celebrity.Select(TranslateOutputResponse).ToList();
+                }
+                else
+                {
+                    throw new AppException("There are not data with the category id:" + categoryId);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new AppException(e.Message);
+            }
         }
 
         public IEnumerable<CelebrityResponse> GetByProfession(Guid professionId)
         {
-            IEnumerable<Celebrity> celebrity = _dBContext.Celebrity.Where(x => x.ProfessionId == professionId).ToList();
-            return !celebrity.Any() ? null : celebrity.Select(TranslateOutputResponse).ToList();
+            try
+            {
+                IEnumerable<Celebrity> celebrity = _dBContext.Celebrity.Where(x => x.ProfessionId == professionId).ToList();
+                if (celebrity.Any())
+                {
+                    return celebrity.Select(TranslateOutputResponse).ToList();
+                }
+                else
+                {
+                    throw new AppException("There are not data with the profession id:" + professionId);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new AppException(e.Message);
+            }
+
         }
 
         public CelebrityResponse GetById(Guid id)
         {
             var celebrity = _dBContext.Celebrity.FirstOrDefault(x => x.Id == id);
-
+            if (celebrity == null)
+            {
+                throw new AppException("There are not user with id:" + id);
+            }
             return TranslateOutputResponse(celebrity);
         }
 
         public CelebrityResponse Save(CelebrityDto data)
         {
-            var celebrity = new Celebrity()
+            try
             {
-                Id = data.Id,
-                FullName = data.FullName,
-                Birthday = data.Birthday,
-                Age = data.Age,
-                Country = data.Country,
-                ImageUrl = data.ImageUrl,
-                CategoryId = data.CategoryId,
-                SocialMediaId = data.SocialMediaId,
-                ProfessionId = data.ProfessionId
-            };
-            _dBContext.Celebrity.Add(celebrity);
-            _dBContext.SaveChanges();
-            return TranslateOutputResponse(celebrity);
+                var celebrity = new Celebrity()
+                {
+                    Id = data.Id,
+                    FullName = data.FullName,
+                    Birthday = data.Birthday,
+                    Age = data.Age,
+                    Country = data.Country,
+                    ImageUrl = data.ImageUrl,
+                    CategoryId = data.CategoryId,
+                    SocialMediaId = data.SocialMediaId,
+                    ProfessionId = data.ProfessionId
+                };
+                _dBContext.Celebrity.Add(celebrity);
+                _dBContext.SaveChanges();
+                return TranslateOutputResponse(celebrity);
+            }
+            catch (Exception e)
+            {
+                throw new AppException(e.Message);
+            }
         }
 
         public CelebrityResponse Update(Guid id, CelebrityDto data)
         {
-            var getValue = _dBContext.Celebrity.FirstOrDefault(x => x.Id == id);
-            if (getValue == null) return null;
-            getValue.FullName = data.FullName;
-            getValue.Age = data.Age;
-            getValue.ImageUrl = data.ImageUrl;
-            getValue.Country = data.Country;
-            getValue.CategoryId = data.CategoryId;
-            getValue.ProfessionId = data.ProfessionId;
-            getValue.SocialMediaId = data.SocialMediaId;
-            getValue.Birthday = data.Birthday;
-            _dBContext.SaveChanges();
-            return TranslateOutputResponse(getValue);
+            try
+            {
+                var getValue = _dBContext.Celebrity.FirstOrDefault(x => x.Id == id);
+                if (getValue == null) throw new AppException("There are not user with id:" + id);
+                getValue.FullName = data.FullName;
+                getValue.Age = data.Age;
+                getValue.ImageUrl = data.ImageUrl;
+                getValue.Country = data.Country;
+                getValue.CategoryId = data.CategoryId;
+                getValue.ProfessionId = data.ProfessionId;
+                getValue.SocialMediaId = data.SocialMediaId;
+                getValue.Birthday = data.Birthday;
+                _dBContext.SaveChanges();
+                return TranslateOutputResponse(getValue);
+            }
+            catch (Exception e)
+            {
+                throw new AppException(e.Message);
+            }
         }
 
         private CelebrityResponse TranslateOutputResponse(Celebrity data)
@@ -97,8 +148,12 @@ namespace CelebrityAPI.Repository
                     listSocialMedia.Add(socialMedia.TwitterURL);
                 }
             }
+            else
+            {
+                throw new AppException("There are not socialMedia check your request");
+            }
 
-            if (category == null || profession == null) return null;
+            if (category == null || profession == null) throw new AppException("There are not category or profession check your request");
             var celebrityResponse = new CelebrityResponse()
             {
                 Id = data.Id,
@@ -116,11 +171,18 @@ namespace CelebrityAPI.Repository
 
         public bool DeleteById(Guid id)
         {
-            var getValue = _dBContext.Celebrity.FirstOrDefault(x => x.Id == id);
-            if (getValue == null) return false;
-            _dBContext.Remove(getValue);
-            _dBContext.SaveChanges();
-            return true;
+            try
+            {
+                var getValue = _dBContext.Celebrity.FirstOrDefault(x => x.Id == id);
+                if (getValue == null) throw new AppException("There are not data with the id:" + id);
+                _dBContext.Remove(getValue);
+                _dBContext.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new AppException(e.Message);
+            }
         }
     }
 }

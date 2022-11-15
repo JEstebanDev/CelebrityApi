@@ -29,10 +29,6 @@ namespace CelebrityAPI.Controller
         public IActionResult GetCategoryById(Guid id)
         {
             var category = _readDeleteRepository.GetById(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
             return Ok(category);
         }
 

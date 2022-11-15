@@ -29,10 +29,6 @@ namespace CelebrityAPI.Controllers
         public IActionResult GetProfessionById(Guid id)
         {
             var value = _readDeleteRepository.GetById(id);
-            if (value == null)
-            {
-                return NotFound();
-            }
             return Ok(value);
         }
 

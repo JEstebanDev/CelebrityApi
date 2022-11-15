@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
 using CelebrityAPI.Controllers;
+using CelebrityAPI.Error;
 
 namespace CelebrityAPI
 {
@@ -70,6 +71,9 @@ namespace CelebrityAPI
             app.UseRouting();
 
             app.UseAuthorization();
+
+            // global error handler
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

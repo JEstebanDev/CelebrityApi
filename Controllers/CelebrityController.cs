@@ -26,10 +26,6 @@ namespace CelebrityAPI.Controllers
         public IActionResult GetAllCelebrity()
         {
             var celebrityResponses = _readDeleteRepository.GetAll();
-            if (celebrityResponses == null)
-            {
-                return NotFound();
-            }
             return Ok(celebrityResponses);
         }
 
@@ -38,10 +34,6 @@ namespace CelebrityAPI.Controllers
         public IActionResult GetCelebrityById(Guid id)
         {
             var value = _readDeleteRepository.GetById(id);
-            if (value == null)
-            {
-                return NotFound();
-            }
             return Ok(value);
         }
         [HttpGet]
@@ -49,10 +41,6 @@ namespace CelebrityAPI.Controllers
         public IActionResult GetCelebrityByCategory(Guid categoryId)
         {
             var value = _filtersRepository.GetByCategory(categoryId);
-            if (value == null)
-            {
-                return NotFound();
-            }
             return Ok(value);
         }
 
@@ -61,10 +49,6 @@ namespace CelebrityAPI.Controllers
         public IActionResult GetCelebrityByProfession(Guid professionId)
         {
             var value = _filtersRepository.GetByProfession(professionId);
-            if (value == null)
-            {
-                return NotFound();
-            }
             return Ok(value);
         }
 

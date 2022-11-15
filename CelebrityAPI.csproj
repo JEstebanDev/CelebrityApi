@@ -5,7 +5,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Profiles\" />
+	  <Compile Remove="Profiles\**" />
+	  <Content Remove="Profiles\**" />
+	  <EmbeddedResource Remove="Profiles\**" />
+	  <None Remove="Profiles\**" />
 	</ItemGroup>
 
 	<ItemGroup>

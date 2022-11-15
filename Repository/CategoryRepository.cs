@@ -4,10 +4,12 @@ using CelebrityAPI.Repository.IRepository;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Net;
+using CelebrityAPI.Error;
 
 namespace CelebrityAPI.Repository
 {
-    public class CategoryRepository : IReadAndDeleteRepository<Category>,ISaveAndUpdateRepository<Category,Category>
+    public class CategoryRepository : IReadAndDeleteRepository<Category>, ISaveAndUpdateRepository<Category, Category>
     {
         private readonly ApplicationDBContext _dBContext;
 
@@ -18,37 +20,72 @@ namespace CelebrityAPI.Repository
 
         public IEnumerable<Category> GetAll()
         {
-            return _dBContext.Category.ToList();
+            var listCategories = _dBContext.Category.ToList();
+            if (listCategories.Count == 0)
+            {
+                throw new AppException("There are not data");
+            }
+            if (listCategories == null)
+            {
+                throw new AppException("Error searching the data");
+            }
+            return listCategories;
         }
 
         public Category GetById(Guid id)
         {
-            return _dBContext.Category.FirstOrDefault(x => x.Id == id);
+            var category = _dBContext.Category.FirstOrDefault(x => x.Id == id);
+            if (category == null)
+            {
+                throw new AppException("There are not user with id:" + id);
+            }
+            return category;
         }
 
         public Category Save(Category data)
         {
-            _dBContext.Category.Add(data);
-            _dBContext.SaveChanges();
+            try
+            {
+                _dBContext.Category.Add(data);
+                _dBContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw new AppException(e.Message);
+            }
             return data;
         }
 
         public Category Update(Guid id, Category data)
         {
-            var getValue = _dBContext.Category.FirstOrDefault((x => x.Id == id));
-            if (getValue == null) return null;
-            getValue.Name = data.Name;
-            _dBContext.SaveChanges();
-            return getValue;
+            try
+            {
+                var getValue = _dBContext.Category.FirstOrDefault((x => x.Id == id));
+                if (getValue == null) throw new AppException("There are not data with the id:" + id);
+                getValue.Name = data.Name;
+                _dBContext.SaveChanges();
+                return getValue;
+            }
+            catch (Exception e)
+            {
+                throw new AppException(e.Message);
+            }
         }
 
         public bool DeleteById(Guid id)
         {
-            var getValue = _dBContext.Category.FirstOrDefault((x => x.Id == id));
-            if (getValue == null) return false;
-            _dBContext.Remove(getValue);
-            _dBContext.SaveChanges();
-            return true;
+            try
+            {
+                var getValue = _dBContext.Category.FirstOrDefault((x => x.Id == id));
+                if (getValue == null) throw new AppException("There are not data with the id:" + id);
+                _dBContext.Remove(getValue);
+                _dBContext.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new AppException(e.Message);
+            }
         }
     }
 }
