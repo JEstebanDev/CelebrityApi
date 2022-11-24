@@ -45,6 +45,7 @@ namespace CelebrityAPI.Repository
         {
             try
             {
+                CheckValue(data);
                 _dBContext.User.Add(data);
                 _dBContext.SaveChanges();
             }
@@ -59,6 +60,7 @@ namespace CelebrityAPI.Repository
         {
             try
             {
+                CheckValue(data);
                 var getValue = _dBContext.User.FirstOrDefault(x => x.Id == id);
                 if (getValue == null) throw new AppException("There are not data with the id:" + id);
                 getValue.Fullname = data.Fullname;
@@ -87,6 +89,25 @@ namespace CelebrityAPI.Repository
             catch (Exception e)
             {
                 throw new AppException(e.Message);
+            }
+        }
+        private void CheckValue(User data)
+        {
+            if (data.Fullname == null)
+            {
+                throw new AppException("Error you need a Fullname");
+            }
+            if (data.Email == null)
+            {
+                throw new AppException("Error you need a Email");
+            }
+            if (data.Password == null)
+            {
+                throw new AppException("Error you need a Password");
+            }
+            if (data.Username == null)
+            {
+                throw new AppException("Error you need a Username");
             }
         }
     }

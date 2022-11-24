@@ -45,6 +45,7 @@ namespace CelebrityAPI.Repository
         {
             try
             {
+                CheckValue(data);
                 _dBContext.Profession.Add(data);
                 _dBContext.SaveChanges();
             }
@@ -59,6 +60,7 @@ namespace CelebrityAPI.Repository
         {
             try
             {
+                CheckValue(data);
                 var getValue = _dBContext.Profession.FirstOrDefault(x => x.Id == id);
                 if (getValue == null) throw new AppException("There are not data with the id:" + id);
                 getValue.Name = data.Name;
@@ -84,6 +86,14 @@ namespace CelebrityAPI.Repository
             catch (Exception e)
             {
                 throw new AppException(e.Message);
+            }
+        }
+
+        private void CheckValue(Profession data)
+        {
+            if (data.Name == null)
+            {
+                throw new AppException("Error you need a Name");
             }
         }
     }

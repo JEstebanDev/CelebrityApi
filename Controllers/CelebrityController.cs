@@ -1,9 +1,7 @@
-﻿using CelebrityAPI.Model.Domain;
-using CelebrityAPI.Repository.IRepository;
+﻿using CelebrityAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using CelebrityAPI.Model.DTO;
-using CelebrityAPI.Repository;
 
 namespace CelebrityAPI.Controllers
 {

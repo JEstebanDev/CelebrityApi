@@ -4,7 +4,6 @@ using CelebrityAPI.Repository.IRepository;
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using System.Net;
 using CelebrityAPI.Error;
 
 namespace CelebrityAPI.Repository
@@ -31,7 +30,6 @@ namespace CelebrityAPI.Repository
             }
             return listCategories;
         }
-
         public Category GetById(Guid id)
         {
             var category = _dBContext.Category.FirstOrDefault(x => x.Id == id);
@@ -46,6 +44,7 @@ namespace CelebrityAPI.Repository
         {
             try
             {
+                CheckValue(data);
                 _dBContext.Category.Add(data);
                 _dBContext.SaveChanges();
             }
@@ -60,6 +59,7 @@ namespace CelebrityAPI.Repository
         {
             try
             {
+                CheckValue(data);
                 var getValue = _dBContext.Category.FirstOrDefault((x => x.Id == id));
                 if (getValue == null) throw new AppException("There are not data with the id:" + id);
                 getValue.Name = data.Name;
@@ -85,6 +85,14 @@ namespace CelebrityAPI.Repository
             catch (Exception e)
             {
                 throw new AppException(e.Message);
+            }
+        }
+
+        private void CheckValue(Category data)
+        {
+            if (data.Name == null)
+            {
+                throw new AppException("Error you need a Name");
             }
         }
     }

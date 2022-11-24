@@ -34,7 +34,7 @@ namespace CelebrityAPI.Repository
                 IEnumerable<Celebrity> celebrity = _dBContext.Celebrity.Where(x => x.CategoryId == categoryId).ToList();
                 if (celebrity.Any())
                 {
-                   return  celebrity.Select(TranslateOutputResponse).ToList();
+                    return celebrity.Select(TranslateOutputResponse).ToList();
                 }
                 else
                 {
@@ -82,6 +82,7 @@ namespace CelebrityAPI.Repository
         {
             try
             {
+                checkValues(data);
                 var celebrity = new Celebrity()
                 {
                     Id = data.Id,
@@ -108,6 +109,7 @@ namespace CelebrityAPI.Repository
         {
             try
             {
+                checkValues(data);
                 var getValue = _dBContext.Celebrity.FirstOrDefault(x => x.Id == id);
                 if (getValue == null) throw new AppException("There are not user with id:" + id);
                 getValue.FullName = data.FullName;
@@ -182,6 +184,40 @@ namespace CelebrityAPI.Repository
             catch (Exception e)
             {
                 throw new AppException(e.Message);
+            }
+        }
+
+
+
+        private void checkValues(CelebrityDto data)
+        {
+            if (data.FullName == null)
+            {
+                throw new AppException("There are not FullName check your request");
+            }
+            if (data.Birthday >= DateTime.Now)
+            {
+                throw new AppException("There are an error with your birthday check your request");
+            }
+            if (data.Age <= 0 || data.Age >= 100)
+            {
+                throw new AppException("There are an error with your age check your request");
+            }
+            if (data.Country == null)
+            {
+                throw new AppException("There are not Country check your request");
+            }
+            if (data.SocialMediaId == Guid.Empty)
+            {
+                throw new AppException("There are not SocialMediaId check your request");
+            }
+            if (data.CategoryId == Guid.Empty)
+            {
+                throw new AppException("There are not CategoryId check your request");
+            }
+            if (data.ProfessionId == Guid.Empty)
+            {
+                throw new AppException("There are not ProfessionId check your request");
             }
         }
     }
